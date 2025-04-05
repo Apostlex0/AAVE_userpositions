@@ -302,6 +302,43 @@ async function fetchUserData(address) {
       }
     }
 
+    // Display detailed holdings information
+    if (userHoldings.length > 0) {
+      console.log("\nDETAILED USER HOLDINGS:");
+      console.log("----------------------------------------");
+      console.log(JSON.stringify(userHoldings, null, 2));
+
+      console.log("\nHOLDINGS SUMMARY:");
+      userHoldings.forEach((holding, index) => {
+        console.log(`\n[${index + 1}] ${holding.symbol} (${holding.asset}):`);
+
+        if (holding.supplyBalance) {
+          console.log(`   Supply: ${holding.supplyBalance}`);
+        }
+
+        if (holding.variableDebt) {
+          console.log(
+            `   Variable Debt: ${holding.variableDebt} ($${
+              holding.variableDebtUSD?.toFixed(2) || "0.00"
+            })`
+          );
+        }
+
+        if (holding.stableDebt) {
+          console.log(
+            `   Stable Debt: ${holding.stableDebt} ($${
+              holding.stableDebtUSD?.toFixed(2) || "0.00"
+            })`
+          );
+        }
+
+        console.log(
+          `   Used as Collateral: ${holding.usedAsCollateral ? "Yes" : "No"}`
+        );
+      });
+      console.log("----------------------------------------");
+    }
+
     // Update cumulative metrics
     if (hasActivePositions) {
       cumulativeMetrics.addressesWithPositions++;
@@ -466,6 +503,46 @@ async function main() {
       ", "
     )}`
   );
+  console.log("============================================\n");
+
+  // Save all user data to a file for reference
+  console.log("Saving all user holdings data to users_data.json");
+  fs.writeFileSync("./users_data.json", JSON.stringify(usersData, null, 2));
+
+  // Display a summary of all users with positions
+  console.log("\n============================================");
+  console.log("ALL USERS WITH POSITIONS");
+  console.log("============================================");
+  usersData.forEach((user, index) => {
+    console.log(`\n[${index + 1}] Address: ${user.address}`);
+    console.log(`  Holdings Count: ${user.holdings.length}`);
+    console.log(`  Has Borrows: ${user.hasActiveBorrows ? "Yes" : "No"}`);
+    console.log(
+      `  Total Liquidity: $${user.metrics.totalLiquidityUSD.toFixed(2)}`
+    );
+
+    if (user.hasActiveBorrows) {
+      console.log(
+        `  Total Borrows: $${
+          user.metrics.totalBorrowsUSD > 0
+            ? user.metrics.totalBorrowsUSD.toFixed(2)
+            : user.metrics.calculatedDebtUSD.toFixed(2)
+        }`
+      );
+      console.log(`  Health Factor: ${user.metrics.healthFactor}`);
+    }
+
+    console.log("  Assets:");
+    user.holdings.forEach((holding) => {
+      console.log(
+        `    - ${holding.symbol}: ${
+          holding.supplyBalance ? `Supply ${holding.supplyBalance}` : ""
+        }${holding.variableDebt ? `, Var Debt ${holding.variableDebt}` : ""}${
+          holding.stableDebt ? `, Stable Debt ${holding.stableDebt}` : ""
+        }`
+      );
+    });
+  });
   console.log("============================================\n");
 
   console.log("Finished fetching all user positions data.");

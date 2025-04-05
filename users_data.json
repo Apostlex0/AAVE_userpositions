@@ -1,0 +1,31 @@
+[
+  {
+    "address": "0x0d0e319054c5a87f4631dd488e37f44d696e4d9b",
+    "hasActivePositions": true,
+    "hasActiveBorrows": true,
+    "holdings": [
+      {
+        "symbol": "WETH",
+        "asset": "0x4200000000000000000000000000000000000006",
+        "supplyBalance": "12350.401477511802495279",
+        "usedAsCollateral": true
+      },
+      {
+        "symbol": "cbBTC",
+        "asset": "0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf",
+        "variableDebt": "176.03420386",
+        "variableDebtUSD": 14527192.650062786,
+        "usedAsCollateral": false
+      }
+    ],
+    "metrics": {
+      "totalLiquidityUSD": 22541325.784219783,
+      "totalCollateralUSD": 22541325.784219783,
+      "totalBorrowsUSD": 14636585.503330313,
+      "calculatedDebtUSD": 14527192.650062786,
+      "healthFactor": "1.2783",
+      "availableBorrowsUSD": 3396475.1240455126,
+      "currentLiquidationThreshold": 0.83
+    }
+  }
+]
